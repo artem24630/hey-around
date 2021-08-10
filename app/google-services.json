@@ -1,0 +1,55 @@
+{
+  "project_info": {
+    "project_number": "574466241725",
+    "firebase_url": "https://heyaround-577f9.firebaseio.com",
+    "project_id": "heyaround-577f9",
+    "storage_bucket": "heyaround-577f9.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:574466241725:android:d8591cc29838dc3a",
+        "android_client_info": {
+          "package_name": "ru.atproduction.heyaround"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "574466241725-t4ega9i5nil4fduqrhclploli76vnlnl.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "ru.atproduction.heyaround",
+            "certificate_hash": "8398ac35f6452804c36405c1da715a286e016e0e"
+          }
+        },
+        {
+          "client_id": "574466241725-h0j5lm05nhcar4f00qt2brk918etuip0.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCIp7u6LLG3M1Bdl6-r-ZaJSkIbPuLX6l4"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "574466241725-h0j5lm05nhcar4f00qt2brk918etuip0.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
