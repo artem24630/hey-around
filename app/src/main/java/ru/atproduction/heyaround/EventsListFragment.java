@@ -1,13 +1,11 @@
 package ru.atproduction.heyaround;
 
 
-import android.app.Activity;
 import android.content.Context;
+import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -18,26 +16,27 @@ import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.TextView;
 
-import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QuerySnapshot;
-import com.google.android.gms.maps.model.LatLng;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-public class events_list_fragment extends Fragment {
+public class EventsListFragment extends Fragment {
     FirebaseFirestore db;
     MapsActivity mapsActivity;
+
     @Nullable
     @Override
-    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, Bundle savedInstanceState) {
-       View view = inflater.inflate(R.layout.activity_events_list_fragment,null);
+    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, Bundle savedInstanceState)
+    {
+        View view = inflater.inflate(R.layout.activity_events_list_fragment, null);
 
-       db = FirebaseFirestore.getInstance();
+        db = FirebaseFirestore.getInstance();
         mapsActivity = (MapsActivity) getActivity();
 
 
