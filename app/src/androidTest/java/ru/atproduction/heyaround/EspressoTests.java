@@ -14,6 +14,7 @@ import static org.junit.Assert.assertEquals;
 
 import android.content.Context;
 import android.support.test.InstrumentationRegistry;
+import android.support.test.espresso.contrib.RecyclerViewActions;
 import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
 import android.support.v4.app.Fragment;
@@ -38,6 +39,7 @@ public class EspressoTests {
 
     private static final String EVENT_NAME = "test_event";
     private static final String EMAIL = generateString() + "@bk.ru";
+    RecyclerViewActions a;
 
     @Rule
     public ActivityTestRule<LoginActivity> testRule = new ActivityTestRule<>(LoginActivity.class);
