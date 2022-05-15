@@ -16,6 +16,10 @@ import android.content.Context;
 import android.support.test.InstrumentationRegistry;
 import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentTransaction;
+
+import com.google.android.gms.maps.SupportMapFragment;
 
 import org.junit.Rule;
 import org.junit.Test;
@@ -30,7 +34,10 @@ import java.util.Random;
  * @see <a href="http://d.android.com/tools/testing">Testing documentation</a>
  */
 @RunWith(AndroidJUnit4.class)
-public class ExampleInstrumentedTest {
+public class EspressoTests {
+
+    private static final String EVENT_NAME = "test_event";
+    private static final String EMAIL = generateString() + "@bk.ru";
 
     @Rule
     public ActivityTestRule<LoginActivity> testRule = new ActivityTestRule<>(LoginActivity.class);
@@ -38,18 +45,17 @@ public class ExampleInstrumentedTest {
     @Test
     public void useAppContext()
     {
-        // Context of the app under test.
         Context appContext = InstrumentationRegistry.getTargetContext();
-
         assertEquals("ru.atproduction.heyaround", appContext.getPackageName());
     }
 
     @Test
     public void registerTest()
     {
+
         onView(withId(R.id.mail))
                 .check(matches(isDisplayed()))
-                .perform(typeText(generateString() + "@bk.ru"), closeSoftKeyboard());
+                .perform(typeText(EMAIL), closeSoftKeyboard());
         onView(withId(R.id.pass))
                 .check(matches(isDisplayed()))
                 .perform(typeText("qwerty123"), closeSoftKeyboard());
@@ -66,7 +72,7 @@ public class ExampleInstrumentedTest {
         }
 
 
-        onView(withText("123123"))
+        onView(withId(R.id.edit_text_name))
                 .check(matches(isDisplayed()))
                 .perform(typeText(generateString()), closeSoftKeyboard());
 
@@ -93,11 +99,11 @@ public class ExampleInstrumentedTest {
 
         onView(withId(R.id.editText))
                 .check(matches(isDisplayed()))
-                .perform(typeText("asdasd"), closeSoftKeyboard());
+                .perform(typeText(EVENT_NAME), closeSoftKeyboard());
 
         onView(withId(R.id.editText4))
                 .check(matches(isDisplayed()))
-                .perform(typeText("asdasd"), closeSoftKeyboard());
+                .perform(typeText(EVENT_NAME), closeSoftKeyboard());
 
         onView(withId(R.id.button))
                 .perform(click());
@@ -126,10 +132,23 @@ public class ExampleInstrumentedTest {
                 .check(matches(isDisplayed()));
     }
 
-    private static final Random rnd = new Random();
+    @Test
+    public void eventsAppearedInProfileTest() throws InterruptedException
+    {
+        Fragment newFragment = new AccountFragment();
+        SupportMapFragment mapFragment = (SupportMapFragment) testRule.getActivity().getSupportFragmentManager().findFragmentById(R.id.map);
+        FragmentTransaction transaction = testRule.getActivity()
+                .getSupportFragmentManager().beginTransaction();
+        transaction.hide(mapFragment).add(R.id.container, newFragment).commitAllowingStateLoss();
+        Thread.sleep(500);
+
+        onView(withId(R.id.textView9)).check(matches(withText(EMAIL)));
+    }
+
 
     private static String generateString()
     {
+        Random rnd = new Random();
         char[] chars = new char[rnd.nextInt(9)];
         for (int i = 0; i < chars.length; i++)
         {

@@ -135,7 +135,6 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                     private void selectFragment(int pos)
                     {
                         Fragment newFragment = null;
-                        Log.d("OLOL", "" + pos);
                         boolean flag = false;
 //                        if(pos==2)
 //                             flag = true;
@@ -153,7 +152,6 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                                 bundle.putString("ID", user.getId());
                                 newFragment.setArguments(bundle);
 
-                                Log.d("OLOL", "changeFragments");
 
                                 FragmentManager fragmentManager = getSupportFragmentManager();
                                 FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
@@ -263,7 +261,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
 
             AlertDialog.Builder builder = new AlertDialog.Builder(MapsActivity.this);
             EditText input = new EditText(MapsActivity.this);
-            input.setText("123123");
+            input.setId(R.id.edit_text_name);
             LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(
                     LinearLayout.LayoutParams.MATCH_PARENT,
                     LinearLayout.LayoutParams.MATCH_PARENT);
@@ -296,7 +294,6 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         {
             //Берем id пользователя из Firestore, записываем в user
             Query query = db.collection("users").whereEqualTo("idAuth", user.getIdAuth());
-            Log.d("OLOL", "" + user.getIdAuth());
             Task<QuerySnapshot> document = query.get();
             document.addOnSuccessListener(documentSnapshots -> {
                 for (DocumentSnapshot d : documentSnapshots.getDocuments()
