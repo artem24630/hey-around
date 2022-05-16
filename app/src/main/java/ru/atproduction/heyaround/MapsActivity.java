@@ -9,6 +9,9 @@ import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
+import android.support.annotation.VisibleForTesting;
+import android.support.test.espresso.IdlingResource;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -66,6 +69,7 @@ import java.util.Map;
 import java.util.concurrent.atomic.AtomicReference;
 
 import de.hdodenhof.circleimageview.CircleImageView;
+import ru.atproduction.heyaround.IdleResource.DialogIdleResource;
 
 
 public class MapsActivity extends AppCompatActivity implements OnMapReadyCallback {
@@ -77,6 +81,8 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     AlertDialog dl;
     SupportMapFragment mapFragment;
     private User user;
+    @Nullable
+    private DialogIdleResource mIdlingResource;
     static ClusterManager<AbstractMarker> clusterManager;
     private static boolean LocationPermision = false;
     private static final int MY_PERMISSIONS_REQUEST_FINE_LOCATION = 0;
@@ -91,7 +97,11 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_maps);
         st = FirebaseStorage.getInstance().getReference();
-
+        getIdlingResource();
+        if (mIdlingResource != null)
+        {
+            mIdlingResource.setIdleState(false);
+        }
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         toolbar.setTitle(R.string.app_name);
         setSupportActionBar(toolbar);
@@ -287,7 +297,10 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                 });
             });
             builder.show();
-
+            if (mIdlingResource != null)
+            {
+                mIdlingResource.setIdleState(true);
+            }
 
         }
         else
@@ -765,5 +778,16 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
             super(itemView);
             circleImageView = itemView.findViewById(R.id.roundIm);
         }
+    }
+
+    @VisibleForTesting
+    @NonNull
+    public IdlingResource getIdlingResource()
+    {
+        if (mIdlingResource == null)
+        {
+            mIdlingResource = new DialogIdleResource();
+        }
+        return mIdlingResource;
     }
 }
