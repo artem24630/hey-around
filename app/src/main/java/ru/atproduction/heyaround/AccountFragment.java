@@ -110,7 +110,6 @@ public class AccountFragment extends Fragment {
                 {
                     user.setId(d.getId());
                     id = user.getId();
-                    Log.d("OLOL", "setId");
                     Task<DocumentSnapshot> datas = db.collection("users").document(id).get();
                     datas.addOnCompleteListener(task -> {
                         DocumentSnapshot documentSnapshot = task.getResult();

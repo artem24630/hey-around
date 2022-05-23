@@ -8,6 +8,7 @@ import static android.support.test.espresso.action.ViewActions.closeSoftKeyboard
 import static android.support.test.espresso.action.ViewActions.longClick;
 import static android.support.test.espresso.action.ViewActions.typeText;
 import static android.support.test.espresso.assertion.ViewAssertions.matches;
+import static android.support.test.espresso.matcher.ViewMatchers.hasDescendant;
 import static android.support.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
 import static android.support.test.espresso.matcher.ViewMatchers.withText;
@@ -27,7 +28,6 @@ import android.support.test.runner.lifecycle.ActivityLifecycleMonitorRegistry;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.View;
 
 import com.google.android.gms.maps.SupportMapFragment;
@@ -39,7 +39,6 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 
 import java.util.Collection;
-import java.util.Random;
 
 
 /**
@@ -49,14 +48,12 @@ import java.util.Random;
  */
 @RunWith(AndroidJUnit4.class)
 public class EspressoTests {
-    private static final String TAG = "EspressoTest";
     private static final String EVENT_NAME = "test_event";
-    public static final String EMAIL = generateString() + "@bk.ru";
+    public static final String EMAIL = Utils.generateString() + "@bk.ru";
     private IdlingResource mIdlingResource;
 
     @Rule
     public ActivityTestRule<LoginActivity> testRule = new ActivityTestRule<>(LoginActivity.class);
-
 
     @Test
     public void useAppContext()
@@ -66,9 +63,8 @@ public class EspressoTests {
     }
 
     @Test
-    public void registerTest()
+    public void registerTest() throws InterruptedException
     {
-
         onView(withId(R.id.mail))
                 .check(matches(isDisplayed()))
                 .perform(typeText(EMAIL), closeSoftKeyboard());
@@ -79,48 +75,30 @@ public class EspressoTests {
                 .check(matches(isDisplayed()))
                 .perform(click());
 
-//        try
-//        {
-//            Thread.sleep(3000);
-//        } catch (InterruptedException e)
-//        {
-//            e.printStackTrace();
-//        }
-        //FIXME надо как-то ждать, когда сменится LoginActivity на MapsAcitvity
+
+//        Thread.sleep(3000);
+
+        // while (!(getCurrentActivity() instanceof MapsActivity)) ;
+
         mIdlingResource = ((MapsActivity) getCurrentActivity()).getIdlingResource();
         IdlingRegistry.getInstance().register(mIdlingResource);
-        mIdlingResource.registerIdleTransitionCallback(new IdlingResource.ResourceCallback() {
-            @Override
-            public void onTransitionToIdle()
-            {
-                onView(withId(R.id.edit_text_name))
-                        .check(matches(isDisplayed()))
-                        .perform(typeText(generateString()), closeSoftKeyboard());
+        onView(withId(R.id.edit_text_name))
+                .check(matches(isDisplayed()))
+                .perform(typeText(Utils.generateString()), closeSoftKeyboard());
+        onView(withText("OK"))
+                .check(matches(isDisplayed()))
+                .perform(click());
+        IdlingRegistry.getInstance().unregister(mIdlingResource);
 
-
-                onView(withText("OK"))
-                        .check(matches(isDisplayed()))
-                        .perform(click());
-
-                onView(withId(R.id.map)).check(matches(isDisplayed()));
-            }
-        });
-
-
+        onView(withId(R.id.map)).check(matches(isDisplayed()));
     }
 
     @Test
-    public void createEventTest()
+    public void createEventTest() throws InterruptedException
     {
         onView(withId(R.id.map)).perform(longClick());
 
-        try
-        {
-            Thread.sleep(3000);
-        } catch (InterruptedException e)
-        {
-            e.printStackTrace();
-        }
+        Thread.sleep(3000);
 
         onView(withId(R.id.editText))
                 .check(matches(isDisplayed()))
@@ -133,25 +111,15 @@ public class EspressoTests {
         onView(withId(R.id.button))
                 .perform(click());
 
-        try
-        {
-            Thread.sleep(1000);
-        } catch (InterruptedException e)
-        {
-            e.printStackTrace();
-        }
+
+        Thread.sleep(1000);
+
 
         onView(withText("I understand"))
                 .check(matches(isDisplayed()))
                 .perform(click());
 
-        try
-        {
-            Thread.sleep(3000);
-        } catch (InterruptedException e)
-        {
-            e.printStackTrace();
-        }
+        Thread.sleep(3000);
 
         onView(withId(R.id.map))
                 .check(matches(isDisplayed()));
@@ -160,9 +128,10 @@ public class EspressoTests {
     @Test
     public void emailCorrectInProfileTest() throws InterruptedException
     {
-        Fragment newFragment = new AccountFragment();
         MapsActivity currentActivity = (MapsActivity) getCurrentActivity();
-        SupportMapFragment mapFragment = (SupportMapFragment) currentActivity.getSupportFragmentManager().findFragmentById(R.id.map);
+        Fragment newFragment = new AccountFragment();
+        SupportMapFragment mapFragment = (SupportMapFragment) currentActivity
+                .getSupportFragmentManager().findFragmentById(R.id.map);
         FragmentTransaction transaction = currentActivity
                 .getSupportFragmentManager().beginTransaction();
         transaction.hide(mapFragment).add(R.id.container, newFragment).commitAllowingStateLoss();
@@ -174,16 +143,18 @@ public class EspressoTests {
     @Test
     public void eventAppearedInProfileTest() throws InterruptedException
     {
-        Fragment newFragment = new AccountFragment();
         MapsActivity currentActivity = (MapsActivity) getCurrentActivity();
-        SupportMapFragment mapFragment = (SupportMapFragment) currentActivity.getSupportFragmentManager().findFragmentById(R.id.map);
+        Fragment newFragment = new AccountFragment();
+        SupportMapFragment mapFragment = (SupportMapFragment) currentActivity
+                .getSupportFragmentManager().findFragmentById(R.id.map);
         FragmentTransaction transaction = currentActivity
                 .getSupportFragmentManager().beginTransaction();
         transaction.hide(mapFragment).add(R.id.container, newFragment).commitAllowingStateLoss();
         Thread.sleep(5000);
         onView(withId(R.id.rv))
-                .check(matches(atPosition(0, withText(EVENT_NAME))));
+                .check(matches(atPosition(0, hasDescendant(withText(EVENT_NAME)))));
     }
+
 
     public static Matcher<View> atPosition(final int position, @NonNull final Matcher<View> itemMatcher)
     {
@@ -202,10 +173,8 @@ public class EspressoTests {
                 RecyclerView.ViewHolder viewHolder = view.findViewHolderForAdapterPosition(position);
                 if (viewHolder == null)
                 {
-                    // has no item on such position
                     return false;
                 }
-                Log.d(TAG, "matchesSafely: " + itemMatcher.toString() + " " + viewHolder.itemView.toString());
                 return itemMatcher.matches(viewHolder.itemView);
             }
         };
@@ -215,29 +184,27 @@ public class EspressoTests {
     public static Activity getCurrentActivity()
     {
         final Activity[] currentActivity = {null};
-        getInstrumentation().runOnMainSync(new Runnable() {
-            public void run()
+        getInstrumentation().runOnMainSync(() -> {
+            Collection<Activity> resumedActivities = ActivityLifecycleMonitorRegistry.getInstance()
+                    .getActivitiesInStage(RESUMED);
+            if (resumedActivities.iterator().hasNext())
             {
-                Collection resumedActivities = ActivityLifecycleMonitorRegistry.getInstance()
-                        .getActivitiesInStage(RESUMED);
-                if (resumedActivities.iterator().hasNext())
-                {
-                    currentActivity[0] = (Activity) resumedActivities.iterator().next();
-                }
+                currentActivity[0] = (Activity) resumedActivities.iterator().next();
             }
         });
         return currentActivity[0];
     }
 
+/*
+        mIdlingResource = ((MapsActivity) getCurrentActivity()).getIdlingResource();
+        IdlingRegistry.getInstance().register(mIdlingResource);
+        mIdlingResource.registerIdleTransitionCallback(new IdlingResource.ResourceCallback() {
+            @Override
+            public void onTransitionToIdle()
+            {
 
-    private static String generateString()
-    {
-        Random rnd = new Random();
-        char[] chars = new char[rnd.nextInt(9)];
-        for (int i = 0; i < chars.length; i++)
-        {
-            chars[i] = (char) (rnd.nextInt('z' - 'a') + 'a');
-        }
-        return new String(chars);
-    }
+            }
+        });
+ */
+
 }
