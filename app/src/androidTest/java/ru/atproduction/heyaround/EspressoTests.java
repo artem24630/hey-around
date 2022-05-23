@@ -40,8 +40,11 @@ import org.junit.runner.RunWith;
 
 import java.util.Collection;
 
-import ru.atproduction.heyaround.IdleResource.DialogIdleResource;
-import ru.atproduction.heyaround.IdleResource.EventNameIdleResource;
+import ru.atproduction.heyaround.IdleResource.IdlingResources;
+import ru.atproduction.heyaround.screen.EventScreen;
+import ru.atproduction.heyaround.screen.LoginScreen;
+import ru.atproduction.heyaround.screen.MapScreen;
+import ru.atproduction.heyaround.screen.PersonalAccountScreen;
 
 
 /**
@@ -53,8 +56,7 @@ import ru.atproduction.heyaround.IdleResource.EventNameIdleResource;
 public class EspressoTests {
     private static final String EVENT_NAME = "test_event";
     public static final String EMAIL = Utils.generateString() + "@bk.ru";
-
-    public static final int MAP = R.id.map;
+    private IdlingResource mIdlingResource;
 
     @Rule
     public ActivityTestRule<LoginActivity> testRule = new ActivityTestRule<>(LoginActivity.class);
@@ -69,49 +71,45 @@ public class EspressoTests {
     @Test
     public void registerTest() throws InterruptedException
     {
-        onView(withId(R.id.mail))
+        onView(LoginScreen.MAIL_VIEW)
                 .check(matches(isDisplayed()))
                 .perform(typeText(EMAIL), closeSoftKeyboard());
-        onView(withId(R.id.pass))
+        onView(LoginScreen.PASS_VIEW)
                 .check(matches(isDisplayed()))
                 .perform(typeText("qwerty123"), closeSoftKeyboard());
-        onView(withId(R.id.registr))
+        onView(LoginScreen.SIGNIN_VIEW)
                 .check(matches(isDisplayed()))
                 .perform(click());
 
-        IdlingResource mIdlingResource = DialogIdleResource.getInstance();
+        mIdlingResource = ((MapsActivity) getCurrentActivity()).getIdlingResource();
         IdlingRegistry.getInstance().register(mIdlingResource);
-
-        onView(withId(R.id.edit_text_name))
+        onView(MapScreen.EDIT_NICKNAME_VIEW)
                 .check(matches(isDisplayed()))
                 .perform(typeText(Utils.generateString()), closeSoftKeyboard());
-        onView(withText("OK"))
+        onView(MapScreen.SUCCESS_VIEW)
                 .check(matches(isDisplayed()))
                 .perform(click());
-
         IdlingRegistry.getInstance().unregister(mIdlingResource);
 
-        onView(withId(MAP)).check(matches(isDisplayed()));
+        onView(MapScreen.MAP_VIEW).check(matches(isDisplayed()));
     }
 
     @Test
     public void createEventTest() throws InterruptedException
     {
-        onView(withId(MAP)).perform(longClick());
+        onView(MapScreen.MAP_VIEW).perform(longClick());
 
-        IdlingRegistry.getInstance().register(EventNameIdleResource.getInstance());
+        Thread.sleep(3000);
 
-        onView(withId(R.id.editText))
+        onView(MapScreen.EDIT_NICKNAME_VIEW)
                 .check(matches(isDisplayed()))
                 .perform(typeText(EVENT_NAME), closeSoftKeyboard());
 
-        IdlingRegistry.getInstance().unregister(EventNameIdleResource.getInstance());
-
-        onView(withId(R.id.editText4))
+        onView(EventScreen.EDIT_EVENT_NAME_VIEW)
                 .check(matches(isDisplayed()))
                 .perform(typeText(EVENT_NAME), closeSoftKeyboard());
 
-        onView(withId(R.id.button))
+        onView(EventScreen.CREATE_EVENT_BTN)
                 .perform(click());
 
 
@@ -124,7 +122,7 @@ public class EspressoTests {
 
         Thread.sleep(3000);
 
-        onView(withId(MAP))
+        onView(MapScreen.MAP_VIEW)
                 .check(matches(isDisplayed()));
     }
 
@@ -134,13 +132,13 @@ public class EspressoTests {
         MapsActivity currentActivity = (MapsActivity) getCurrentActivity();
         Fragment newFragment = new AccountFragment();
         SupportMapFragment mapFragment = (SupportMapFragment) currentActivity
-                .getSupportFragmentManager().findFragmentById(MAP);
+                .getSupportFragmentManager().findFragmentById(R.id.map);
         FragmentTransaction transaction = currentActivity
                 .getSupportFragmentManager().beginTransaction();
         transaction.hide(mapFragment).add(R.id.container, newFragment).commitAllowingStateLoss();
         Thread.sleep(5000);
 
-        onView(withId(R.id.textView9)).check(matches(withText("E-mail: " + EMAIL)));
+        onView(PersonalAccountScreen.EDIT_USERNAME_VIEW).check(matches(withText("E-mail: " + EMAIL)));
     }
 
     @Test
@@ -149,12 +147,12 @@ public class EspressoTests {
         MapsActivity currentActivity = (MapsActivity) getCurrentActivity();
         Fragment newFragment = new AccountFragment();
         SupportMapFragment mapFragment = (SupportMapFragment) currentActivity
-                .getSupportFragmentManager().findFragmentById(MAP);
+                .getSupportFragmentManager().findFragmentById(R.id.map);
         FragmentTransaction transaction = currentActivity
                 .getSupportFragmentManager().beginTransaction();
         transaction.hide(mapFragment).add(R.id.container, newFragment).commitAllowingStateLoss();
         Thread.sleep(5000);
-        onView(withId(R.id.rv))
+        onView(PersonalAccountScreen.EVENTS)
                 .check(matches(atPosition(0, hasDescendant(withText(EVENT_NAME)))));
     }
 
