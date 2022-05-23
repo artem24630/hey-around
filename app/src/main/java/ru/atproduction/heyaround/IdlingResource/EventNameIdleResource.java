@@ -1,4 +1,4 @@
-package ru.atproduction.heyaround.IdleResource;
+package ru.atproduction.heyaround.IdlingResource;
 
 import android.support.annotation.Nullable;
 import android.support.test.espresso.IdlingResource;

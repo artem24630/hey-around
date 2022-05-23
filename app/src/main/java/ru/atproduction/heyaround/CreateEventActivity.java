@@ -28,7 +28,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicReference;
 
-import ru.atproduction.heyaround.IdleResource.EventNameIdleResource;
+import ru.atproduction.heyaround.IdlingResource.EventNameIdleResource;
 
 public class CreateEventActivity extends AppCompatActivity implements CompoundButton.OnCheckedChangeListener {
     private TextView currentDateTime;

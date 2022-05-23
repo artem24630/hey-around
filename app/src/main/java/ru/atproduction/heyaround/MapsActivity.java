@@ -67,7 +67,7 @@ import java.util.Map;
 import java.util.concurrent.atomic.AtomicReference;
 
 import de.hdodenhof.circleimageview.CircleImageView;
-import ru.atproduction.heyaround.IdleResource.DialogIdleResource;
+import ru.atproduction.heyaround.IdlingResource.DialogIdleResource;
 
 
 public class MapsActivity extends AppCompatActivity implements OnMapReadyCallback {

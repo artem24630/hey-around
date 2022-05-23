@@ -10,7 +10,6 @@ import static android.support.test.espresso.action.ViewActions.typeText;
 import static android.support.test.espresso.assertion.ViewAssertions.matches;
 import static android.support.test.espresso.matcher.ViewMatchers.hasDescendant;
 import static android.support.test.espresso.matcher.ViewMatchers.isDisplayed;
-import static android.support.test.espresso.matcher.ViewMatchers.withId;
 import static android.support.test.espresso.matcher.ViewMatchers.withText;
 import static android.support.test.runner.lifecycle.Stage.RESUMED;
 import static org.junit.Assert.assertEquals;
@@ -20,7 +19,6 @@ import android.content.Context;
 import android.support.annotation.NonNull;
 import android.support.test.InstrumentationRegistry;
 import android.support.test.espresso.IdlingRegistry;
-import android.support.test.espresso.IdlingResource;
 import android.support.test.espresso.matcher.BoundedMatcher;
 import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
@@ -40,7 +38,8 @@ import org.junit.runner.RunWith;
 
 import java.util.Collection;
 
-import ru.atproduction.heyaround.IdleResource.IdlingResources;
+import ru.atproduction.heyaround.IdlingResource.DialogIdleResource;
+import ru.atproduction.heyaround.IdlingResource.EventNameIdleResource;
 import ru.atproduction.heyaround.screen.EventScreen;
 import ru.atproduction.heyaround.screen.LoginScreen;
 import ru.atproduction.heyaround.screen.MapScreen;
@@ -56,7 +55,6 @@ import ru.atproduction.heyaround.screen.PersonalAccountScreen;
 public class EspressoTests {
     private static final String EVENT_NAME = "test_event";
     public static final String EMAIL = Utils.generateString() + "@bk.ru";
-    private IdlingResource mIdlingResource;
 
     @Rule
     public ActivityTestRule<LoginActivity> testRule = new ActivityTestRule<>(LoginActivity.class);
@@ -81,15 +79,16 @@ public class EspressoTests {
                 .check(matches(isDisplayed()))
                 .perform(click());
 
-        mIdlingResource = ((MapsActivity) getCurrentActivity()).getIdlingResource();
-        IdlingRegistry.getInstance().register(mIdlingResource);
+
+        DialogIdleResource dialogIdleResource = DialogIdleResource.getInstance();
+        IdlingRegistry.getInstance().register(dialogIdleResource);
         onView(MapScreen.EDIT_NICKNAME_VIEW)
                 .check(matches(isDisplayed()))
                 .perform(typeText(Utils.generateString()), closeSoftKeyboard());
         onView(MapScreen.SUCCESS_VIEW)
                 .check(matches(isDisplayed()))
                 .perform(click());
-        IdlingRegistry.getInstance().unregister(mIdlingResource);
+        IdlingRegistry.getInstance().unregister(dialogIdleResource);
 
         onView(MapScreen.MAP_VIEW).check(matches(isDisplayed()));
     }
@@ -99,13 +98,13 @@ public class EspressoTests {
     {
         onView(MapScreen.MAP_VIEW).perform(longClick());
 
-        Thread.sleep(3000);
-
-        onView(MapScreen.EDIT_NICKNAME_VIEW)
-                .check(matches(isDisplayed()))
-                .perform(typeText(EVENT_NAME), closeSoftKeyboard());
+        IdlingRegistry.getInstance().register(EventNameIdleResource.getInstance());
 
         onView(EventScreen.EDIT_EVENT_NAME_VIEW)
+                .check(matches(isDisplayed()))
+                .perform(typeText(EVENT_NAME), closeSoftKeyboard());
+        IdlingRegistry.getInstance().unregister(EventNameIdleResource.getInstance());
+        onView(EventScreen.EDIT_EVENT_DESC_VIEW)
                 .check(matches(isDisplayed()))
                 .perform(typeText(EVENT_NAME), closeSoftKeyboard());
 

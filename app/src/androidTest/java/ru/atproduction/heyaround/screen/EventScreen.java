@@ -10,6 +10,7 @@ import ru.atproduction.heyaround.R;
 
 public class EventScreen {
 
-    public static final Matcher<View> EDIT_EVENT_NAME_VIEW = withId(R.id.editText4);
+    public static final Matcher<View> EDIT_EVENT_DESC_VIEW = withId(R.id.editText4);
+    public static final Matcher<View> EDIT_EVENT_NAME_VIEW = withId(R.id.editText);
     public static final Matcher<View> CREATE_EVENT_BTN = withId(R.id.button);
 }
