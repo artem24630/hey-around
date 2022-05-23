@@ -71,7 +71,7 @@ public class AccountFragment extends Fragment {
 
         FloatingActionButton floatingActionButton = view.findViewById(R.id.floatingActionButton);
         floatingActionButton.setOnClickListener(v -> {
-            Fragment fragment = new EditAcc();
+            Fragment fragment = new EditProfileFragment();
             Bundle bundle = new Bundle();
             bundle.putString("id", id);
             fragment.setArguments(bundle);

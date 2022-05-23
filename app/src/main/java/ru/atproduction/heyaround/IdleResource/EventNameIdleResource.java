@@ -5,15 +5,15 @@ import android.support.test.espresso.IdlingResource;
 
 import java.util.concurrent.atomic.AtomicBoolean;
 
-public class DialogIdleResource implements IdlingResource {
+public class EventNameIdleResource implements IdlingResource {
 
-    private static final DialogIdleResource INSTANCE = new DialogIdleResource();
+    private static final EventNameIdleResource INSTANCE = new EventNameIdleResource();
 
-    private DialogIdleResource()
+    private EventNameIdleResource()
     {
     }
 
-    public static DialogIdleResource getInstance()
+    public static EventNameIdleResource getInstance()
     {
         return INSTANCE;
     }

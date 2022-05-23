@@ -1,5 +1,8 @@
 package ru.atproduction.heyaround;
 
+import static android.app.Activity.RESULT_OK;
+import static ru.atproduction.heyaround.MapsActivity.db;
+
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.net.Uri;
@@ -27,10 +30,7 @@ import com.google.firebase.storage.StorageReference;
 
 import java.io.IOException;
 
-import static android.app.Activity.RESULT_OK;
-import static ru.atproduction.heyaround.MapsActivity.db;
-
-public class EditAcc extends Fragment {
+public class EditProfileFragment extends Fragment {
     private String id;
     private Uri selectedImage;
 

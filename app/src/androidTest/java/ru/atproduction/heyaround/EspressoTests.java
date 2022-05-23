@@ -40,7 +40,8 @@ import org.junit.runner.RunWith;
 
 import java.util.Collection;
 
-import ru.atproduction.heyaround.IdleResource.IdlingResources;
+import ru.atproduction.heyaround.IdleResource.DialogIdleResource;
+import ru.atproduction.heyaround.IdleResource.EventNameIdleResource;
 
 
 /**
@@ -52,7 +53,8 @@ import ru.atproduction.heyaround.IdleResource.IdlingResources;
 public class EspressoTests {
     private static final String EVENT_NAME = "test_event";
     public static final String EMAIL = Utils.generateString() + "@bk.ru";
-    private IdlingResource mIdlingResource;
+
+    public static final int MAP = R.id.map;
 
     @Rule
     public ActivityTestRule<LoginActivity> testRule = new ActivityTestRule<>(LoginActivity.class);
@@ -77,7 +79,7 @@ public class EspressoTests {
                 .check(matches(isDisplayed()))
                 .perform(click());
 
-        mIdlingResource = IdlingResources.dialogIdlingResource;
+        IdlingResource mIdlingResource = DialogIdleResource.getInstance();
         IdlingRegistry.getInstance().register(mIdlingResource);
 
         onView(withId(R.id.edit_text_name))
@@ -89,19 +91,21 @@ public class EspressoTests {
 
         IdlingRegistry.getInstance().unregister(mIdlingResource);
 
-        onView(withId(R.id.map)).check(matches(isDisplayed()));
+        onView(withId(MAP)).check(matches(isDisplayed()));
     }
 
     @Test
     public void createEventTest() throws InterruptedException
     {
-        onView(withId(R.id.map)).perform(longClick());
+        onView(withId(MAP)).perform(longClick());
 
-        Thread.sleep(3000);
+        IdlingRegistry.getInstance().register(EventNameIdleResource.getInstance());
 
         onView(withId(R.id.editText))
                 .check(matches(isDisplayed()))
                 .perform(typeText(EVENT_NAME), closeSoftKeyboard());
+
+        IdlingRegistry.getInstance().unregister(EventNameIdleResource.getInstance());
 
         onView(withId(R.id.editText4))
                 .check(matches(isDisplayed()))
@@ -120,7 +124,7 @@ public class EspressoTests {
 
         Thread.sleep(3000);
 
-        onView(withId(R.id.map))
+        onView(withId(MAP))
                 .check(matches(isDisplayed()));
     }
 
@@ -130,7 +134,7 @@ public class EspressoTests {
         MapsActivity currentActivity = (MapsActivity) getCurrentActivity();
         Fragment newFragment = new AccountFragment();
         SupportMapFragment mapFragment = (SupportMapFragment) currentActivity
-                .getSupportFragmentManager().findFragmentById(R.id.map);
+                .getSupportFragmentManager().findFragmentById(MAP);
         FragmentTransaction transaction = currentActivity
                 .getSupportFragmentManager().beginTransaction();
         transaction.hide(mapFragment).add(R.id.container, newFragment).commitAllowingStateLoss();
@@ -145,7 +149,7 @@ public class EspressoTests {
         MapsActivity currentActivity = (MapsActivity) getCurrentActivity();
         Fragment newFragment = new AccountFragment();
         SupportMapFragment mapFragment = (SupportMapFragment) currentActivity
-                .getSupportFragmentManager().findFragmentById(R.id.map);
+                .getSupportFragmentManager().findFragmentById(MAP);
         FragmentTransaction transaction = currentActivity
                 .getSupportFragmentManager().beginTransaction();
         transaction.hide(mapFragment).add(R.id.container, newFragment).commitAllowingStateLoss();

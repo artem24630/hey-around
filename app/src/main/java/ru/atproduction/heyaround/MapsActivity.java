@@ -68,7 +68,6 @@ import java.util.concurrent.atomic.AtomicReference;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 import ru.atproduction.heyaround.IdleResource.DialogIdleResource;
-import ru.atproduction.heyaround.IdleResource.IdlingResources;
 
 
 public class MapsActivity extends AppCompatActivity implements OnMapReadyCallback {
@@ -81,7 +80,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     SupportMapFragment mapFragment;
     private User user;
     @Nullable
-    private DialogIdleResource mIdlingResource = IdlingResources.dialogIdlingResource;
+    private DialogIdleResource mIdlingResource = DialogIdleResource.getInstance();
     static ClusterManager<AbstractMarker> clusterManager;
     private static boolean LocationPermision = false;
     private static final int MY_PERMISSIONS_REQUEST_FINE_LOCATION = 0;
@@ -460,7 +459,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
 
         mMap.setOnMapLongClickListener(latLng -> {
 
-            Intent intent = new Intent(MapsActivity.this, CreateEvent.class);
+            Intent intent = new Intent(MapsActivity.this, CreateEventActivity.class);
             intent.putExtra("LatLng", latLng);
             intent.putExtra("userId", user.getId());
             //  intent.putExtra("ref", (Parcelable) myRef);
