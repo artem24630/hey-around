@@ -40,6 +40,8 @@ import org.junit.runner.RunWith;
 
 import java.util.Collection;
 
+import ru.atproduction.heyaround.IdleResource.IdlingResources;
+
 
 /**
  * Instrumented test, which will execute on an Android device.
@@ -75,19 +77,16 @@ public class EspressoTests {
                 .check(matches(isDisplayed()))
                 .perform(click());
 
-
-//        Thread.sleep(3000);
-
-        // while (!(getCurrentActivity() instanceof MapsActivity)) ;
-
-        mIdlingResource = ((MapsActivity) getCurrentActivity()).getIdlingResource();
+        mIdlingResource = IdlingResources.dialogIdlingResource;
         IdlingRegistry.getInstance().register(mIdlingResource);
+
         onView(withId(R.id.edit_text_name))
                 .check(matches(isDisplayed()))
                 .perform(typeText(Utils.generateString()), closeSoftKeyboard());
         onView(withText("OK"))
                 .check(matches(isDisplayed()))
                 .perform(click());
+
         IdlingRegistry.getInstance().unregister(mIdlingResource);
 
         onView(withId(R.id.map)).check(matches(isDisplayed()));
